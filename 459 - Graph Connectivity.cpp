@@ -1,81 +1,81 @@
+/**
+UVa
+459 - Graph Connectivity
+**/
+
+
 #include<bits/stdc++.h>
 using namespace std;
-int parent[100];
-int cnt[30];
-int finds(int n)
+
+int parent[3000];
+int finds(int a)
 {
-    if(parent[n]==n)
-    {
-        return n;
-    }
-    parent[n]=finds(parent[n]);
-    return parent[n];
-}
-void unions(int a,int b)
-{
-    int u=finds(a);
-    int v=finds(b);
-    if(u==v)
-    {
-        return;
-    }
+    if(parent[a]==a)
+        return a;
     else
-    {
-        parent[v]=u;
-        printf("%c is the parent of %c\n",u+64,v+64);
-    }
+        return parent[a]=finds(parent[a]);
+
 }
-void makeset(int n)
+void make_parent(int range)
 {
-    for(int i=1; i<=n; i++)
+    for(int i=1; i<=range; i++)
     {
         parent[i]=i;
     }
+    return;
 }
+void unions(int a, int b)
+{
+    int u = finds(a);
+    int v = finds(b);
+    if(u!=v)
+    {
+        parent[u]=v;
+    }
+
+    return;
+}
+
 int main()
 {
-    int n,u,v,kase,test;
-    char ch;
-    char str[3];
-    cin>>test;
-    while(test--)
+    int cases;
+    while(cin>>cases)
     {
-        cin>>ch;
-        getchar();
-        n=ch-64;
-        //cout<<n<<endl;
-        makeset(n);
-        int cn=0;
-        while(gets(str))
+        while(cases--)
         {
-            if(strlen(str)==0)
+
+            memset(parent,-1,sizeof(parent));
+            char maxChar;
+            cin>>maxChar;
+            int sz = maxChar-'A'+1;
+            make_parent(sz);
+            cin.ignore();
+            string ss;
+            while(getline(cin, ss)&&ss!="")
             {
-                break;
+                //cout<<"paisi"<<endl;
+                unions(ss[0]-'A'+1,ss[1]-'A'+1);
             }
-            u=str[0]-64;
-            //cout<<"u "<<u<<endl;
-            v=str[1]-64;
-            //cout<<"v "<<v<<endl;
-            ++cn;
-            unions(u,v);
-        }
-        memset(cnt,0,sizeof(cnt));
-        for(int i=1;i<=cn;i++)
-        {
-            finds(parent[i]);
-        }
-        for(int i=1;i<=n;i++)
-        {
-            cnt[parent[i]]++;
-        }
-        int sum=0;
-        for(int i=1;i<=26;i++)
-        {
-            if(cnt[i]!=0)
+            int cnt=0;
+            int arr[sz+1];
+            memset(arr,0,sizeof(arr));
+            for(int i=1; i<=sz; i++)
             {
-                sum++;
+                arr[finds(i)]++;
+                //cout<<arr[i]<<" ";
             }
+            for(int i=1; i<=sz; i++)
+            {
+                if(arr[i]!=0)
+                    cnt++;
+            }
+
+            cout<<cnt<<endl;
+            if(cases)
+                cout<<endl;
         }
-        cout<<sum<<endl;
+
     }
+    return 0;
+
 }
